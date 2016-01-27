@@ -20,8 +20,7 @@ var quiz_quote = function() {
 		container : null,
 		quote_area : null,
 		button_area : null,
-		message_area : null,
-		next_question : null
+		message_area : null
 	}
 	
 	// invoke each time you want a new quiz
@@ -75,22 +74,6 @@ var quiz_quote = function() {
 			"class" : "qq-message-area"
 		}).appendTo(elements.container);
 		
-		// where the next question prompt appears
-		elements.next_question = $("<div />", {
-			"class" : "qq-next-question"
-		})
-		.on('click', function(){
-			
-			attempt_next_question();
-		})
-		.appendTo(parent);
-		
-		// keyboard events
-		$('body').on('keyup', function(evt){
-			if(evt.keyCode===13 || evt.keyCode===39 ) {
-				attempt_next_question()
-			}
-		});
 	}
 	
 	/*
@@ -184,7 +167,6 @@ var quiz_quote = function() {
 		
 		// stop the user from skipping
 		proceed = false;
-		elements.next_question.text('');
 		elements.message_area.text('');
 		
 		// update the quote area with the current quote
@@ -205,7 +187,6 @@ var quiz_quote = function() {
 				elements.quote_area.hide();
 				elements.button_area.hide();
 				elements.message_area.hide();
-				elements.next_question.hide();
 				
 				// build an end slate
 				var end_slate = $("<div />", {
@@ -234,12 +215,10 @@ var quiz_quote = function() {
 						build_players();
 						
 						// show elements again
-						elements.next_question.text('');
 						elements.message_area.text('');
 						elements.quote_area.show();
 						elements.button_area.show();
 						elements.message_area.show();
-						elements.next_question.show();
 					})
 					.appendTo(end_slate); 
 					
