@@ -107,6 +107,7 @@ var quiz_quote = function() {
 		
 		// go through the provided quiz data
 		_.each(quiz_data, function(player,a){
+			
 			// go through each quote and combine into an object with the player id	
 			_.each(player.quotes, function(quote,b){
 				new_quiz_data[count] = {
@@ -122,22 +123,25 @@ var quiz_quote = function() {
 			})
 			.on('click', function(evt){
 				
-				// its the right player
-				if(player.id === shuffled_quote_order[current_position].player) {
+				// they can't keep checking
+				if(proceed===false) {
+					// its the right player
+					if(player.id === shuffled_quote_order[current_position].player) {
+						
+						elements.message_area.text("Success ! " + get_player_name(shuffled_quote_order[current_position].player) + " said that");
 					
-					elements.message_area.text("Success ! " + get_player_name(shuffled_quote_order[current_position].player) + " said that");
-				
-				} else {
+					} else {
+						
+						// its the wrong player
+						elements.message_area.text("Fail ! " + get_player_name(shuffled_quote_order[current_position].player) + " said that");
+					}
 					
-					// its the wrong player
-					elements.message_area.text("Fail ! " + get_player_name(shuffled_quote_order[current_position].player) + " said that");
+						// update the message in the next question area
+						elements.next_question.text('Next question');
+						
+						// allow the user to proceed to the next question
+						proceed = true;
 				}
-				
-					// update the message in the next question area
-					elements.next_question.text('Next question');
-					
-					// allow the user to proceed to the next question
-					proceed = true;
 			})
 			.appendTo(elements.button_area);
 			
@@ -170,7 +174,6 @@ var quiz_quote = function() {
 	
 	// shows the current message
 	var game_on = function() {
-		
 		
 		// stop the user from skipping
 		proceed = false;
