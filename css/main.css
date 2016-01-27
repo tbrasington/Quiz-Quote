@@ -26,6 +26,7 @@
 
 .qq-button-area {
 	height: 40vh;
+	overflow: hidden;
 }
 	
 	.qq-player-button {

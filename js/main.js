@@ -81,69 +81,16 @@ var quiz_quote = function() {
 		})
 		.on('click', function(){
 			
-			// user is allowed to move on
-			if(proceed) {
-				console.log(total_quotes)
-				// update the counter
-				current_position++;
-				
-				// we have reached the end of the game, so show an end message
-				if(current_position>=total_quotes) {
-					
-					// hide the game
-					elements.quote_area.hide();
-					elements.button_area.hide();
-					elements.message_area.hide();
-					elements.next_question.hide();
-					
-					// build an end slate
-					var end_slate = $("<div />", {
-						"class" : "qq-end-slate"
-					}).appendTo(elements.container);
-					
-						// thank you message
-						var thank_you_message = $("<div />", {
-							"class" : "qq-thank-you",
-							"text" : "Thanks for playing."
-						}).appendTo(end_slate); 
-						// restart message
-						var restart_message = $("<div />", {
-							"class" : "qq-restart",
-							"text" : "Restart"
-						})
-						.on('click', function(evt){
-							
-							// rmeove this
-							end_slate.remove();
-							
-							// reshuffle the game
-							shuffled_quote_order = null;
-							total_quotes = 0;
-							current_position = 0;
-							build_players();
-							
-							// show elements again
-							elements.next_question.text('');
-							elements.message_area.text('');
-							elements.quote_area.show();
-							elements.button_area.show();
-							elements.message_area.show();
-							elements.next_question.show();
-						})
-						.appendTo(end_slate); 
-						
-						// social message
-						var social_message = $("<div />", {
-							"class" : "qq-social-message"
-						}).appendTo(end_slate); 
-					
-				} else {
-					// show the next quote
-					game_on();
-				}
-			}	
+			attempt_next_question();
 		})
 		.appendTo(elements.container);
+		
+		// keyboard events
+		$('body').on('keyup', function(evt){
+			if(evt.keyCode===13 || evt.keyCode===39 ) {
+				attempt_next_question()
+			}
+		});
 	}
 	
 	/*
@@ -155,6 +102,8 @@ var quiz_quote = function() {
 		
 		// temporary object, with the merged quote and player ids
 		var new_quiz_data = {}, count = 0;
+		// clean out the button area
+		elements.button_area.empty();
 		
 		// go through the provided quiz data
 		_.each(quiz_data, function(player,a){
@@ -232,6 +181,69 @@ var quiz_quote = function() {
 		elements.quote_area.text(shuffled_quote_order[current_position].quote);
 	}
 	
+	// can we move on
+	var attempt_next_question = function() {
+		// user is allowed to move on
+		if(proceed) {
+			// update the counter
+			current_position++;
+			
+			// we have reached the end of the game, so show an end message
+			if(current_position>=total_quotes) {
+				
+				// hide the game
+				elements.quote_area.hide();
+				elements.button_area.hide();
+				elements.message_area.hide();
+				elements.next_question.hide();
+				
+				// build an end slate
+				var end_slate = $("<div />", {
+					"class" : "qq-end-slate"
+				}).appendTo(elements.container);
+				
+					// thank you message
+					var thank_you_message = $("<div />", {
+						"class" : "qq-thank-you",
+						"text" : "Thanks for playing."
+					}).appendTo(end_slate); 
+					// restart message
+					var restart_message = $("<div />", {
+						"class" : "qq-restart",
+						"text" : "Restart"
+					})
+					.on('click', function(evt){
+						
+						// rmeove this
+						end_slate.remove();
+						
+						// reshuffle the game
+						shuffled_quote_order = null;
+						total_quotes = 0;
+						current_position = 0;
+						build_players();
+						
+						// show elements again
+						elements.next_question.text('');
+						elements.message_area.text('');
+						elements.quote_area.show();
+						elements.button_area.show();
+						elements.message_area.show();
+						elements.next_question.show();
+					})
+					.appendTo(end_slate); 
+					
+					// social message
+					var social_message = $("<div />", {
+						"class" : "qq-social-message"
+					}).appendTo(end_slate); 
+				
+			} else {
+				// show the next quote
+				game_on();
+			}
+		}	
+	}
 	
 	// gets the player name from the id
 	var get_player_name = function(id) {
