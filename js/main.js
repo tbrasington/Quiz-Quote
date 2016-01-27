@@ -83,7 +83,7 @@ var quiz_quote = function() {
 			
 			attempt_next_question();
 		})
-		.appendTo(elements.container);
+		.appendTo(parent);
 		
 		// keyboard events
 		$('body').on('keyup', function(evt){
@@ -125,22 +125,29 @@ var quiz_quote = function() {
 				
 				// they can't keep checking
 				if(proceed===false) {
+					// message template
+					var message = '';
 					// its the right player
 					if(player.id === shuffled_quote_order[current_position].player) {
 						
-						elements.message_area.text("Success ! " + get_player_name(shuffled_quote_order[current_position].player) + " said that");
+						message = "Success ! " + get_player_name(shuffled_quote_order[current_position].player) + " said that";
 					
 					} else {
 						
 						// its the wrong player
-						elements.message_area.text("Fail ! " + get_player_name(shuffled_quote_order[current_position].player) + " said that");
+						message =  "Fail ! " + get_player_name(shuffled_quote_order[current_position].player) + " said that";
+						
+						
 					}
 					
-						// update the message in the next question area
-						elements.next_question.text('Next question');
-						
-						// allow the user to proceed to the next question
-						proceed = true;
+					// allow the user to proceed to the next question
+					proceed = true;
+					elements.message_area.addClass('show-message').text(message);
+					
+					setTimeout(function(){
+						elements.message_area.removeClass('show-message')
+						attempt_next_question();
+					}, 700);
 				}
 			})
 			.appendTo(elements.button_area);
